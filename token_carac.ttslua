@@ -1,0 +1,80 @@
+function generateButtonParamiters()
+  tokenValue = {
+    index = 0, click_function = 'changeValue', function_owner = self, label = '', color = {0, 0, 0}, font_color = {1, 1, 1},
+    position = {0, 0.1, 1}, width = 600, height = 600, font_size = 650, tooltip = '+ / −'
+  }
+  caracValue = {
+    index = 1, click_function = 'changeCarac', function_owner = self, label = '', color = {0, 0, 0}, font_color = {1, 1, 1},
+    position = {0, -0.05, 0}, rotation = {0, 0, 180}, width = 600, height = 600, font_size = 675, tooltip = '+ / −'
+  }
+end
+
+count = 1
+indexCarac = 5
+tableCarac = {'MOU', 'INI', 'ATT', 'FOR', 'DEF', 'RES', 'COU', 'PEU', 'DIS', 'TIR', 'Ftir', 'POU', 'FOI'}
+
+
+function onLoad()
+  generateButtonParamiters()
+
+
+
+  tokenValue.label = tableCarac[indexCarac] .. '\n+' .. tostring(count).. '\n'
+  caracValue.label = tableCarac[indexCarac]
+
+  self.setColorTint({1, 1, 1})
+  self.createButton(tokenValue)
+  self.createButton(caracValue)
+end
+
+
+function changeValue(obj, color, alt_click)
+  if alt_click == false then
+    count = count + 1
+    if count == 0 then
+      count = 1
+      self.setColorTint({1,1,1})
+      self.editButton({index=0, font_color = {1, 1, 1}})
+      self.editButton({index=1, font_color = {1, 1, 1}})
+    end
+  else
+    count = count - 1
+    if count == 0 then
+      count = -1
+      self.setColorTint({0.6,0,0})
+      self.editButton({index=0, font_color = {0.6, 0, 0}})
+      self.editButton({index=1, font_color = {0.6, 0, 0}})
+    end
+  end
+
+  s = tableCarac[indexCarac]
+  if count > 0 then
+    s = s .. '\n' ..  '+' .. tostring(count).. '\n'
+  else
+    s = s .. '\n' .. '−' .. tostring(count * - 1).. '\n'
+  end
+  self.editButton({index=0, label = s})
+end
+
+function changeCarac(obj, color, alt_click)
+  if alt_click == false then
+    indexCarac = indexCarac + 1
+    if indexCarac == 14 then
+      indexCarac = 1
+    end
+  else
+    indexCarac = indexCarac - 1
+    if indexCarac == 0 then
+      indexCarac = 13
+    end
+  end
+  s = ''
+  s = tableCarac[indexCarac]
+  self.editButton({index=1, label = s})
+  if count > 0 then
+    s = s .. '\n' .. '+' .. tostring(count).. '\n'
+  else
+    s = s .. '\n' .. '−' .. tostring(count * - 1).. '\n'
+  end
+  self.editButton({index=0, label = s})
+end
