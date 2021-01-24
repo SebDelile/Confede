@@ -5,34 +5,46 @@ function generateButtonParamiters()
   }
   caracValue = {
     index = 1, click_function = 'changeCarac', function_owner = self, label = '', color = {0, 0, 0}, font_color = {1, 1, 1},
-    position = {0, -0.05, 0}, rotation = {0, 0, 180}, width = 600, height = 600, font_size = 675, tooltip = '+ / −'
+    position = {0, - 0.05, 0}, rotation = {0, 0, 180}, width = 600, height = 600, font_size = 675, tooltip = '+ / −'
   }
   hiddenButton = {
     index = 2, click_function = 'hiddenFeature', function_owner = self, label = '', color = {0, 0, 0}, font_color = {1, 1, 1},
-    position = {0, 0.05, -0.5}, width = 0.0, height = 0.1, font_size = 650, tooltip = ''
+    position = {0, 0.05, - 0.5}, width = 0.0, height = 0.1, font_size = 650, tooltip = ''
   }
 end
 
-count = 1
-indexCarac = 5
+count = tonumber(self.getDescription())
 tableCarac = {'MOU', 'INI', 'ATT', 'FOR', 'DEF', 'RES', 'COU', 'PEU', 'DIS', 'TIR', 'Ftir', 'POU', 'FOI'}
-
+for key, value in pairs(tableCarac) do
+  if self.getName() == value then
+    indexCarac = key
+    break
+  end
+end
 
 function onLoad()
   generateButtonParamiters()
 
-
-
-  tokenValue.label = '+' .. tostring(count)
+  if count > 0 then
+    tokenValue.label = '+' .. tostring(count)
+  else
+    tokenValue.label = '−' .. tostring(count * - 1)
+  end
   caracValue.label = tableCarac[indexCarac]
   hiddenButton.label = tableCarac[indexCarac]
-
-  self.setColorTint({1, 1, 1})
 
   self.createButton(tokenValue)
   self.createButton(caracValue)
   self.createButton(hiddenButton)
 
+  if count > 0 then
+    self.setColorTint({1, 1, 1})
+  else
+    self.setColorTint({0.6, 0, 0})
+    self.editButton({index = 0, font_color = {0.6, 0, 0}})
+    self.editButton({index = 1, font_color = {0.6, 0, 0}})
+    self.editButton({index = 2, font_color = {0.6, 0, 0}})
+  end
 end
 
 
@@ -41,19 +53,19 @@ function changeValue(obj, color, alt_click)
     count = count + 1
     if count == 0 then
       count = 1
-      self.setColorTint({1,1,1})
-      self.editButton({index=0, font_color = {1, 1, 1}})
-      self.editButton({index=1, font_color = {1, 1, 1}})
-      self.editButton({index=2, font_color = {1, 1, 1}})
+      self.setColorTint({1, 1, 1})
+      self.editButton({index = 0, font_color = {1, 1, 1}})
+      self.editButton({index = 1, font_color = {1, 1, 1}})
+      self.editButton({index = 2, font_color = {1, 1, 1}})
     end
   else
     count = count - 1
     if count == 0 then
       count = -1
-      self.setColorTint({0.6,0,0})
-      self.editButton({index=0, font_color = {0.6, 0, 0}})
-      self.editButton({index=1, font_color = {0.6, 0, 0}})
-      self.editButton({index=2, font_color = {0.6, 0, 0}})
+      self.setColorTint({0.6, 0, 0})
+      self.editButton({index = 0, font_color = {0.6, 0, 0}})
+      self.editButton({index = 1, font_color = {0.6, 0, 0}})
+      self.editButton({index = 2, font_color = {0.6, 0, 0}})
     end
   end
 
@@ -63,7 +75,8 @@ function changeValue(obj, color, alt_click)
   else
     s = s .. '−' .. tostring(count * - 1)
   end
-  self.editButton({index=0, label = s})
+  self.editButton({index = 0, label = s})
+  self.setDescription(tostring(count))
 end
 
 function changeCarac(obj, color, alt_click)
@@ -80,10 +93,11 @@ function changeCarac(obj, color, alt_click)
   end
   s = ''
   s = tableCarac[indexCarac]
-  self.editButton({index=1, label = s})
-  self.editButton({index=2, label = s})
+  self.editButton({index = 1, label = s})
+  self.editButton({index = 2, label = s})
+  self.setName(s)
 end
 
 function hiddenFeature()
---vide
+  --vide
 end

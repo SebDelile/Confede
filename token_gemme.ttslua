@@ -1,0 +1,86 @@
+function generateButtonParamiters()
+  tokenValue = {
+    index = 0, click_function = 'changeValue', function_owner = self, label = '', color = {0, 0, 0}, font_color = {1, 1, 1},
+    position = {0, 0.10, 0.25}, width = 400, height = 400, font_size = 400, tooltip = '+ / −'
+  }
+  ElementValue = {
+    index = 1, click_function = 'changeElement', function_owner = self, label = '', color = {0, 0, 0}, font_color = {1, 1, 1},
+    position = {0, 0, 0}, rotation = {0, 0, 180}, width = 600, height = 600, font_size = 400, tooltip = '+ / −'
+  }
+end
+
+count = tonumber(self.getDescription())
+tableElement = {'NEU', 'LUM', 'TEN', 'AIR', 'TER', 'FEU', 'EAU', 'FOI'}
+tableLinks = {
+  "http://cloud-3.steamusercontent.com/ugc/1755809397788294098/1C7CD0B087337D7A57F5446126FFE666D0174A7C/",
+  "http://cloud-3.steamusercontent.com/ugc/1755809397788290630/009BC1D06DD5D255E8D207917A26924026EBDD0B/",
+  "http://cloud-3.steamusercontent.com/ugc/1755809397788294866/769A35C617BA32C87B1A695D865F41918F25C8C2/",
+  "http://cloud-3.steamusercontent.com/ugc/1755809397788285267/3A6BDD2B4911331530B589DB50F48B1FD1D86BDE/",
+  "http://cloud-3.steamusercontent.com/ugc/1755809397788295659/7217E7B5EBEC69030F3D88D1A77EAEC6BCD75AE0/",
+  "http://cloud-3.steamusercontent.com/ugc/1755809397788289016/E0B20F9CF725AB51C8FA25732163B5F8C32192C2/",
+  "http://cloud-3.steamusercontent.com/ugc/1755809397788288236/7CE468672CA1ACB72995338D887624AAAE8D8058/",
+  "http://cloud-3.steamusercontent.com/ugc/1755809397788289901/CD76A650E801EB5E06D34AC7C09DD18A89A062C8/"
+}
+
+tableCoord = {0, 0, 0, -0.2, 0, 0.4, 0.2, 0.1}
+
+
+for key, value in pairs(tableElement) do
+  if self.getName() == value then
+    indexElement = key
+    break
+  end
+end
+
+function onLoad()
+  generateButtonParamiters()
+
+  tokenValue.label = tostring(count)
+  ElementValue.label = tableElement[indexElement]
+
+--[[  if self.getCustomObject({image}) ~= tableLinks[indexElement] then
+    self.setCustomObject({image=tableLinks[indexElement]})
+    self.reload()
+  end --]]
+
+  self.createButton(tokenValue)
+  self.createButton(ElementValue)
+
+  self.editButton({index = 0, position = {0, 0.1, tableCoord[indexElement]}})
+
+end
+
+
+function changeValue(obj, color, alt_click)
+  if alt_click == false then
+    count = count + 1
+  else
+    count = count - 1
+    if count == -1 then
+      count = 0
+    end
+  end
+
+  self.editButton({index = 0, label = tostring(count)})
+  self.setDescription(tostring(count))
+end
+
+function changeElement(obj, color, alt_click)
+  if alt_click == false then
+    indexElement = indexElement + 1
+    if indexElement == 9 then
+      indexElement = 1
+    end
+  else
+    indexElement = indexElement - 1
+    if indexElement == 0 then
+      indexElement = 8
+    end
+  end
+  s = ''
+  s = tableElement[indexElement]
+  self.editButton({index = 1, label = s})
+  self.setName(s)
+  self.setCustomObject({image=tableLinks[indexElement]})
+  self.reload()
+end
